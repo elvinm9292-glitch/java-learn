@@ -26,7 +26,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2025.1.3"))
     implementation("org.springframework.cloud:spring-cloud-starter-vault-config")
-
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+    implementation("org.springframework.boot:spring-boot-starter-flyway")
+    implementation("org.flywaydb:flyway-database-postgresql")
 
 }
 

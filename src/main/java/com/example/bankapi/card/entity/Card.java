@@ -1,6 +1,8 @@
-package com.example.bankapi.entity;
+package com.example.bankapi.card.entity;
 
-import com.example.bankapi.enums.CardStatus;
+import com.example.bankapi.account.entity.Account;
+import com.example.bankapi.card.enums.CardStatus;
+import com.example.bankapi.card.enums.CardTierType;
 import jakarta.persistence.*;
 import java.time.YearMonth;
 
@@ -12,8 +14,11 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "masked_number", nullable = false, length = 19)
-    private String maskedNumber;
+    @Column(nullable = false, unique = true, length = 16)
+    private String number;
+
+    @Column(nullable = false, length = 3)
+    private String cvv;
 
     @Column(nullable = false, length = 7)
     private YearMonth expiry;
@@ -22,6 +27,10 @@ public class Card {
     @Column(nullable = false, length = 20)
     private CardStatus status = CardStatus.ACTIVE;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private CardTierType tier = CardTierType.CLASSIC;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
@@ -29,22 +38,29 @@ public class Card {
     protected Card() {
     }
 
-    public Card(Account account, String maskedNumber, YearMonth expiry) {
+    public Card(Account account, String number, String cvv, YearMonth expiry, CardTierType tier) {
         this.account = account;
-        this.maskedNumber = maskedNumber;
+        this.number = number;
+        this.cvv = cvv;
         this.expiry = expiry;
+        this.tier = tier;
     }
 
     public void block() {
         if (status == CardStatus.BLOCKED) {
-            throw new IllegalStateException("Карта уже заблокирована");
+            throw new IllegalStateException("Card is already blocked");
         }
         this.status = CardStatus.BLOCKED;
     }
 
     public Long getId() { return id; }
-    public String getMaskedNumber() { return maskedNumber; }
     public YearMonth getExpiry() { return expiry; }
     public CardStatus getStatus() { return status; }
     public Account getAccount() { return account; }
+    public CardTierType getTier(){
+        return tier;
+    }
+    public String getNumber() { return number; }
+    public String getMaskedNumber() { return "**** **** **** " + number.substring(12); }
+    public String getCvv() { return cvv; }
 }
