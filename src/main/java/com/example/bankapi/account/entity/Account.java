@@ -1,6 +1,7 @@
 package com.example.bankapi.account.entity;
 
 import com.example.bankapi.account.enums.AccountStatus;
+import com.example.bankapi.account.exception.InsufficientFundsException;
 import com.example.bankapi.card.entity.Card;
 import jakarta.persistence.*;
 
@@ -88,7 +89,7 @@ public class Account {
             throw new IllegalStateException("Счет заблокирован");
         }
         if (balance.compareTo(amount) < 0){
-            throw new IllegalArgumentException("Недостаточно средств на счете");
+            throw new InsufficientFundsException();
         }
         balance = balance.subtract(amount);
     }

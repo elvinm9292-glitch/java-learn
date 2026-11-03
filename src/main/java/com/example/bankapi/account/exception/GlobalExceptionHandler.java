@@ -24,6 +24,13 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse("ACCOUNT_NOT_FOUND", e.getMessage()));
     }
 
+    // The request is valid, the business rule refuses it: 409, not 400
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ResponseEntity<ErrorResponse> handleInsufficientFunds(InsufficientFundsException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse("INSUFFICIENT_FUNDS", e.getMessage()));
+    }
+
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
